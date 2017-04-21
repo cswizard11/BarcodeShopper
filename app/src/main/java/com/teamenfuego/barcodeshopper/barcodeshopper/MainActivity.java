@@ -112,7 +112,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(id == the_list.getListID())
                 {
-
+                    ListView currentListView =(ListView)findViewById(R.id.item_list);
+                    ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(0).getItems());
+                    currentListView.setAdapter(listAdapter);
                     currentList = id;
                 }
             }

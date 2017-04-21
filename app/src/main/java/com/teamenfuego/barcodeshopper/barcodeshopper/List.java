@@ -14,6 +14,7 @@ public class List
 
     public List(String list_name, int listID)
     {
+        this.items = new ArrayList<String>();
         this.list_name = list_name;
         this.listID = listID;
     }
