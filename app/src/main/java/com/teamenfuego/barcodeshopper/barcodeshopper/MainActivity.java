@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.view.menu.ActionMenuItem;
+import android.support.v7.view.menu.MenuView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,14 +16,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    ArrayList<String> myItemList = new ArrayList<String>();
+    private NavigationView navigationView;
+
+    public ArrayList<List> myLists = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,15 +51,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        myItemList.add("Hello");
-        myItemList.add("This is an item in the list");
+        //myItemList.add("Hello");
+        //myItemList.add("This is an item in the list");
 
-        ListView itemListView = (ListView)findViewById(R.id.item_list);
-        ListAdapter itemAdapter = new ListAdapter(this, myItemList);
-        itemListView.setAdapter(itemAdapter);
+        //ListView itemListView = (ListView)findViewById(R.id.item_list);
+        //ListAdapter itemAdapter = new ListAdapter(this, myItemList);
+        //itemListView.setAdapter(itemAdapter);
+        //List happy = new List("happy");
+        //myLists.add(happy);
+        //TextView text = (TextView)findViewById(R.id.textView3);
+        //text.setText("" + myLists.size());
     }
 
     @Override
@@ -94,28 +104,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.createNew) {
+            MenuItem newItem = new ActionMenuItem(getApplicationContext(), R.id.listMenu, myLists.size(), 1, 1, "my list" + myLists.size());
+            List list1 = new List(newItem.getTitle().toString());
+            myLists.add(list1);
+            Menu menu = navigationView.getMenu();
+            menu.add(R.id.listMenu,Menu.NONE,Menu.NONE,"List Number " + myLists.size());
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        //list1.addItem("item 1");
+        //list1.addItem("item 2");
+        //list1.addItem("item 3");
+        //list1.addItem("item 4");
+        //list1.addItem("item 5");
+        //list1.addItem("item 6");
+        //list1.addItem("item 7");
+        //list1.addItem("item 8");
+        //list1.addItem("item 9");
+        //list1.addItem("item 10");
+        //list1.addItem("item 11");
+        //list1.addItem("item 12");
+        //list1.addItem("item 13");
+        //list1.addItem("item 14");
+        //list1.addItem("item 15");
+        //list1.addItem("item 16");
+        //list1.addItem("item 17");
+        //list1.addItem("item 18");
+        //list1.addItem("item 19");
+        //list1.addItem("item 20");
+        //list1.addItem("item 21");
+        //list1.addItem("item 22");
+        //list1.addItem("item 23");
+        //list1.addItem("item 24");
+        //list1.addItem("item 25");
+        //ListView itemListView = (ListView)findViewById(R.id.item_list);
+        //ListAdapter itemAdapter = new ListAdapter(this, myLists.get(0).getItems());
+        //itemListView.setAdapter(itemAdapter);
+
+        TextView text = (TextView)findViewById(R.id.textView3);
+        text.setText("" + myLists.size());
         return true;
     }
     public void openCamera()
     {
-//        Intent intent = new Intent(this, CameraActivity.class);
-//        startActivity(intent);
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
