@@ -9,24 +9,24 @@ import java.util.ArrayList;
 public class List
 {
     private String list_name;
-    private ArrayList<String> items;
+    private ArrayList<Item> items;
     private int listIndex;
     private int listID;
 
     public List(String list_name, int listIndex, int listID)
     {
-        this.items = new ArrayList<String>();
+        this.items = new ArrayList<Item>();
         this.list_name = list_name;
         this.listIndex = listIndex;
         this.listID = listID;
     }
 
-    public void addItem(String item)
+    public void addItem(Item item)
     {
         items.add(item);
     }
 
-    public ArrayList<String> getItems()
+    public ArrayList<Item> getItems()
     {
         return items;
     }
