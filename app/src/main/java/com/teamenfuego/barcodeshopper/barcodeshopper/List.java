@@ -10,11 +10,14 @@ public class List
 {
     private String list_name;
     private ArrayList<String> items;
+    private int listIndex;
     private int listID;
 
-    public List(String list_name, int listID)
+    public List(String list_name, int listIndex, int listID)
     {
+        this.items = new ArrayList<String>();
         this.list_name = list_name;
+        this.listIndex = listIndex;
         this.listID = listID;
     }
 
@@ -35,5 +38,11 @@ public class List
     public void setListID(int listID) {
         this.listID = listID;
     }
+
+    public int getListIndex() {
+        return listIndex;
+    }
+
+
 
 }
