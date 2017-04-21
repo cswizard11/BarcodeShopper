@@ -13,9 +13,9 @@ import java.util.Collection;
  * Created by natha on 4/21/2017.
  */
 
-public class ListAdapter extends ArrayAdapter<String>
+public class ListAdapter extends ArrayAdapter<Item>
 {
-    ListAdapter(Context context, Collection<String> items)
+    ListAdapter(Context context, Collection<Item> items)
     {
         super(context,0);
         addAll(items);
@@ -25,9 +25,9 @@ public class ListAdapter extends ArrayAdapter<String>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        String item_position = getItem(position);
+        Item item_position = getItem(position);
         TextView item = new TextView(getContext());
-        item.setText(item_position);
+        item.setText(item_position.toString());
         return item;
     }
 }
