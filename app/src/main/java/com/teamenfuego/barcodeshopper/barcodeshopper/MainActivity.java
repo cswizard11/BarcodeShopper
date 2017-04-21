@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     public ArrayList<List> myLists = new ArrayList<>();
-    public int currentList;
+    public int currentList = R.id.createNew;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        FloatingActionButton addItemButton = (FloatingActionButton) findViewById(R.id.addItemButton);
+        addItemButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view)
+            {
+                if(currentList != R.id.createNew)
+                {
+                    myLists.get(currentList - 1).addItem("just added an item");
+                    ListView currentListView =(ListView)findViewById(R.id.item_list);
+                    ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
+                    currentListView.setAdapter(listAdapter);
+                }
+            }
+        });
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -52,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        currentList = 0;
     }
 
     @Override
@@ -64,28 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -102,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             menu.add(R.id.listMenu, listID, Menu.NONE, "List Number " + listIndex);
             List list1 = new List("List Number " + listIndex, listIndex, listID);
             myLists.add(list1);
-
             currentList = listIndex;
+            renderList(currentList);
         }
         else
         {
@@ -111,17 +102,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(id == the_list.getListID())
                 {
-                    ListView currentListView =(ListView)findViewById(R.id.item_list);
-                    ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(0).getItems());
-                    currentListView.setAdapter(listAdapter);
-                    currentList = id;
                     currentList = the_list.getListIndex();
+                    renderList(currentList);
                 }
             }
         }
 
-        TextView text = (TextView)findViewById(R.id.textView3);
-        text.setText("" + currentList);
+        //TextView text = (TextView)findViewById(R.id.textView3);
+        //text.setText("" + currentList);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -129,7 +117,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void openCamera() {
+    public void renderList(int listIndex)
+    {
+        ListView currentListView =(ListView)findViewById(R.id.item_list);
+        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
+        currentListView.setAdapter(listAdapter);
+        TextView text = (TextView)findViewById(R.id.Title);
+        text.setText(myLists.get(currentList - 1).getList_name());
+    }
+
+    public void openCamera()
+    {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
@@ -137,10 +135,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (result != null) {
             System.out.println(result.getContents());
         }
     }
+
 }

@@ -21,6 +21,15 @@ public class List
         this.listID = listID;
     }
 
+    public String getList_name() {
+        return list_name;
+    }
+
+    public void setList_name(String list_name) {
+        this.list_name = list_name;
+    }
+
+    public void addItem(String item)
     public void addItem(Item item)
     {
         items.add(item);
@@ -42,7 +51,5 @@ public class List
     public int getListIndex() {
         return listIndex;
     }
-
-
 
 }
