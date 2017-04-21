@@ -15,4 +15,14 @@ public class List
     {
         this.list_name = list_name;
     }
+
+    public void addItem(String item)
+    {
+        items.add(item);
+    }
+
+    public ArrayList<String> getItems()
+    {
+        return items;
+    }
 }
