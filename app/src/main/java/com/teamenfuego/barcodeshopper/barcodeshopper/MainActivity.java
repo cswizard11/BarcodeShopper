@@ -13,10 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
 
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    ArrayList<String> myItemList = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        myItemList.add("Hello");
+        myItemList.add("This is an item in the list");
+
+        ListView itemListView = (ListView)findViewById(R.id.item_list);
+        ListAdapter itemAdapter = new ListAdapter(this, myItemList);
+        itemListView.setAdapter(itemAdapter);
     }
 
     @Override
