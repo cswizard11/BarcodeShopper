@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -112,7 +114,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     public void openCamera()
     {
-        Intent intent = new Intent(this, CameraActivity.class);
+//        Intent intent = new Intent(this, CameraActivity.class);
+//        startActivity(intent);
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setOrientationLocked(false);
+        Intent intent = integrator.createScanIntent();
         startActivity(intent);
     }
 }
