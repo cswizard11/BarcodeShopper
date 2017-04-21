@@ -3,9 +3,6 @@ package com.teamenfuego.barcodeshopper.barcodeshopper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.view.menu.ActionMenuItem;
-import android.support.v7.view.menu.MenuView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,13 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -96,15 +92,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        int listID = myLists.size() + 1;
 
         if (id == R.id.createNew) {
+            int listIndex = myLists.size() + 1;
+            int listID = View.generateViewId();
+
             Menu menu = navigationView.getMenu();
-            menu.add(R.id.listMenu, listID, Menu.NONE,"List Number " + listID);
-            List list1 = new List("List Number " + listID, listID);
+            menu.add(R.id.listMenu, listID, Menu.NONE, "List Number " + listIndex);
+            List list1 = new List("List Number " + listIndex, listIndex, listID);
             myLists.add(list1);
 
-            currentList = id;
+            currentList = listIndex;
         }
         else
         {
@@ -116,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(0).getItems());
                     currentListView.setAdapter(listAdapter);
                     currentList = id;
+                    currentList = the_list.getListIndex();
                 }
             }
         }
@@ -129,12 +128,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void openCamera()
-    {
+    public void openCamera() {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
         Intent intent = integrator.createScanIntent();
         startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (result != null) {
+            System.out.println(result.getContents());
+        }
     }
 }
