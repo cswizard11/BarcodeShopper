@@ -1,5 +1,6 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 
@@ -116,10 +118,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
 //        Intent intent = new Intent(this, CameraActivity.class);
 //        startActivity(intent);
+
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
-        Intent intent = integrator.createScanIntent();
-        startActivity(intent);
+        integrator.initiateScan();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            System.out.println(scanResult.getContents());
+        }
     }
 }
