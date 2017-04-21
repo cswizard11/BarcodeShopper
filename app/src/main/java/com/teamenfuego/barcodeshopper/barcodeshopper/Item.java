@@ -20,7 +20,7 @@ public class Item {
 
     public Item(int barcodeID) {
         //contact sellers
-        this("default", "$0.00", "McDonalds co.", barcodeID);
+        this("default", "$0.00", "default", barcodeID);
     }
 
     public String toString() {

@@ -133,8 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
-        Intent intent = integrator.createScanIntent();
-        startActivity(intent);
+        integrator.initiateScan();
     }
 
     @Override
