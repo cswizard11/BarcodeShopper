@@ -10,10 +10,12 @@ public class List
 {
     private String list_name;
     private ArrayList<String> items;
+    private int listID;
 
-    public List(String list_name)
+    public List(String list_name, int listID)
     {
         this.list_name = list_name;
+        this.listID = listID;
     }
 
     public void addItem(String item)
@@ -25,4 +27,13 @@ public class List
     {
         return items;
     }
+
+    public int getListID() {
+        return listID;
+    }
+
+    public void setListID(int listID) {
+        this.listID = listID;
+    }
+
 }

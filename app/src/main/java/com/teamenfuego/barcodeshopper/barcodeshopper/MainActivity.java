@@ -105,17 +105,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.createNew) {
-            MenuItem newItem = new ActionMenuItem(getApplicationContext(), R.id.listMenu, myLists.size(), 1, 1, "my list" + myLists.size());
-            List list1 = new List(newItem.getTitle().toString());
-            myLists.add(list1);
             Menu menu = navigationView.getMenu();
-            menu.add(R.id.listMenu,Menu.NONE,Menu.NONE,"List Number " + myLists.size());
-        } else if (id == R.id.nav_gallery) {
+            menu.add(R.id.listMenu, myLists.size() + 1, Menu.NONE,"List Number " + (myLists.size() + 1));
+            List list1 = new List("List Number " + (myLists.size() + 1), myLists.size() + 1);
+            myLists.add(list1);
+        }
+        else
+        {
+            for(List the_list: myLists)
+            {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
