@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     public ArrayList<List> myLists = new ArrayList<>();
+    public int currentList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,16 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //myItemList.add("Hello");
-        //myItemList.add("This is an item in the list");
-
-        //ListView itemListView = (ListView)findViewById(R.id.item_list);
-        //ListAdapter itemAdapter = new ListAdapter(this, myItemList);
-        //itemListView.setAdapter(itemAdapter);
-        //List happy = new List("happy");
-        //myLists.add(happy);
-        //TextView text = (TextView)findViewById(R.id.textView3);
-        //text.setText("" + myLists.size());
+        currentList = 0;
     }
 
     @Override
@@ -103,57 +96,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        int listID = myLists.size() + 1;
 
         if (id == R.id.createNew) {
             Menu menu = navigationView.getMenu();
-            menu.add(R.id.listMenu, myLists.size() + 1, Menu.NONE,"List Number " + (myLists.size() + 1));
-            List list1 = new List("List Number " + (myLists.size() + 1), myLists.size() + 1);
+            menu.add(R.id.listMenu, listID, Menu.NONE,"List Number " + listID);
+            List list1 = new List("List Number " + listID, listID);
             myLists.add(list1);
+
+            currentList = id;
         }
         else
         {
             for(List the_list: myLists)
             {
+                if(id == the_list.getListID())
+                {
 
+                    currentList = id;
+                }
             }
         }
+
+        TextView text = (TextView)findViewById(R.id.textView3);
+        text.setText("" + currentList);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
-        //list1.addItem("item 1");
-        //list1.addItem("item 2");
-        //list1.addItem("item 3");
-        //list1.addItem("item 4");
-        //list1.addItem("item 5");
-        //list1.addItem("item 6");
-        //list1.addItem("item 7");
-        //list1.addItem("item 8");
-        //list1.addItem("item 9");
-        //list1.addItem("item 10");
-        //list1.addItem("item 11");
-        //list1.addItem("item 12");
-        //list1.addItem("item 13");
-        //list1.addItem("item 14");
-        //list1.addItem("item 15");
-        //list1.addItem("item 16");
-        //list1.addItem("item 17");
-        //list1.addItem("item 18");
-        //list1.addItem("item 19");
-        //list1.addItem("item 20");
-        //list1.addItem("item 21");
-        //list1.addItem("item 22");
-        //list1.addItem("item 23");
-        //list1.addItem("item 24");
-        //list1.addItem("item 25");
-        //ListView itemListView = (ListView)findViewById(R.id.item_list);
-        //ListAdapter itemAdapter = new ListAdapter(this, myLists.get(0).getItems());
-        //itemListView.setAdapter(itemAdapter);
-
-        TextView text = (TextView)findViewById(R.id.textView3);
-        text.setText("" + myLists.size());
         return true;
     }
+
     public void openCamera()
     {
         IntentIntegrator integrator = new IntentIntegrator(this);
