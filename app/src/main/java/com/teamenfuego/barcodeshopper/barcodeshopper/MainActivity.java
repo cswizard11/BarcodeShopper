@@ -1,8 +1,13 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public ArrayList<List> myLists = new ArrayList<>();
     public int currentList = R.id.createNew;
+    private String m_Text = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +56,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view)
             {
+
                 if(currentList != R.id.createNew)
                 {
-                    myLists.get(currentList - 1).addItem("just added an item");
+                    myLists.get(currentList - 1).addItem(new Item("PRODUCT", "5 dollars", "MCDONALDS", 10231920));
                     ListView currentListView =(ListView)findViewById(R.id.item_list);
                     ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
                     currentListView.setAdapter(listAdapter);
+                    //View productView = new View();
+                    EntryBox popup = new EntryBox();
+                    //popup.show();
                 }
             }
         });
@@ -68,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
 
     @Override
     public void onBackPressed() {

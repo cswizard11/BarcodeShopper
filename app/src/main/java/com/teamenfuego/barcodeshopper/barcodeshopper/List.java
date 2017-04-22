@@ -29,7 +29,6 @@ public class List
         this.list_name = list_name;
     }
 
-    public void addItem(String item)
     public void addItem(Item item)
     {
         items.add(item);

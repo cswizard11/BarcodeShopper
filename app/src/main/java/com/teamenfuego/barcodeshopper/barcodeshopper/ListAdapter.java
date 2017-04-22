@@ -26,8 +26,9 @@ public class ListAdapter extends ArrayAdapter<Item>
     public View getView(int position, View convertView, ViewGroup parent)
     {
         Item item_position = getItem(position);
-        TextView item = new TextView(getContext());
-        item.setText(item_position.toString());
-        return item;
+        TextView text = new TextView(getContext());
+        text.setText(item_position.toString());
+
+        return text;
     }
 }

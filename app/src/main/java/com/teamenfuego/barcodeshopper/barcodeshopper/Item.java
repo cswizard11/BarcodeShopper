@@ -24,7 +24,7 @@ public class Item {
     }
 
     public String toString() {
-        return this.name + ", " + this.seller + ": " + this.price;
+        return this.name + ", " + this.seller + "\n" + this.price;
     }
 
 }
