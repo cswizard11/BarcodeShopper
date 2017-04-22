@@ -213,9 +213,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_list:
-                removeListFromSidebar(myLists.getCurrent());
-                myLists.remove(myLists.getCurrent());
-                setHomeScreen();
+                if (myLists.size() > 0) {
+                    removeListFromSidebar(myLists.getCurrent());
+                    myLists.remove(myLists.getCurrent());
+                    setHomeScreen();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
