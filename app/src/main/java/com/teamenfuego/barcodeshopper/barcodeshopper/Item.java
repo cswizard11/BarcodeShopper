@@ -36,23 +36,6 @@ public class Item {
         this.seller = seller;
         this.barcodeID = barcodeID;
     }
-    /*
-    public void run() {
-        System.out.println("The thread is running");
-        android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-        stat(this.barcodeID);
-        System.out.println("The thread has quit");
-    }
-
-
-    public Item(String barcodeID) {
-        this("Unamed Item", "$0.00", "Amazon", barcodeID);
-        this.barcodeID = barcodeID;
-        System.out.println("This is where the thread starts");
-        Thread thread = new Thread();
-        thread.start();
-    }
-    */
 
     public Item(String barcodeID) {
         this("NoName", "$0.50","Sell, Sell, Sell",barcodeID);
