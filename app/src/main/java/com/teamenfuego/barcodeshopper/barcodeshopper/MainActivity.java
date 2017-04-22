@@ -1,5 +1,6 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,16 +16,25 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String OUTPUT_FILE = "shoppingLists.json";
+
     private NavigationView navigationView;
 
-    public ArrayList<List> myLists = new ArrayList<>();
+    public ListList myLists = new ListList();
     public int currentList = R.id.createNew;
 
     @Override
@@ -51,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(currentList != R.id.createNew)
                 {
-                    myLists.get(currentList - 1).addItem("just added an item");
+                    myLists.get(currentList - 1).addItem(new Item(129293));
                     ListView currentListView =(ListView)findViewById(R.id.item_list);
                     ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
                     currentListView.setAdapter(listAdapter);
@@ -67,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        loadListsFromFile();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        writeListsToFile();
     }
 
     @Override
@@ -89,16 +107,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int listIndex = myLists.size() + 1;
             int listID = View.generateViewId();
 
-            Menu menu = navigationView.getMenu();
-            menu.add(R.id.listMenu, listID, Menu.NONE, "List Number " + listIndex);
-            List list1 = new List("List Number " + listIndex, listIndex, listID);
+            ShoppingList list1 = new ShoppingList("List Number " + listIndex, listIndex, listID);
             myLists.add(list1);
-            currentList = listIndex;
+            addListToSidebar(list1);
+            currentList = list1.getListIndex();
             renderList(currentList);
         }
         else
         {
-            for(List the_list: myLists)
+            for(ShoppingList the_list: myLists.getIterable())
             {
                 if(id == the_list.getListID())
                 {
@@ -126,6 +143,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         text.setText(myLists.get(currentList - 1).getList_name());
     }
 
+    private void addListToSidebar(ShoppingList list) {
+        Menu menu = navigationView.getMenu();
+        menu.add(R.id.listMenu, list.getListID(), Menu.NONE, "List Number " + list.getListIndex());
+    }
+
     public void openCamera()
     {
         IntentIntegrator integrator = new IntentIntegrator(this);
@@ -141,6 +163,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (result != null) {
             System.out.println(result.getContents());
         }
+    }
+
+    private void loadListsFromFile() {
+        File path = getApplicationContext().getFilesDir();
+        File file = new File(path, OUTPUT_FILE);
+
+        Gson gson = new Gson();
+        try {
+            FileReader in = new FileReader(file);
+            myLists = gson.fromJson(in, ListList.class);
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            for (int i = 0; i < myLists.getIterable().size(); i++) {
+                addListToSidebar(myLists.get(i));
+            }
+        }
+    }
+
+    private void writeListsToFile() {
+        Gson gson = new Gson();
+        File path = getApplicationContext().getFilesDir();
+        File file = new File(path, OUTPUT_FILE);
+        FileOutputStream stream;
+        try {
+            stream = new FileOutputStream(file);
+            stream.write(gson.toJson(myLists).getBytes());
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //        FileOutputStream outputStream;
+//        Gson gson = new Gson();
+//        try {
+//            outputStream = openFileOutput("shoppingLists.json", Context.MODE_PRIVATE);
+//            outputStream.write(gson.toJson(myLists).getBytes());
+//            outputStream.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

@@ -6,14 +6,14 @@ import java.util.ArrayList;
  * Created by natha on 4/21/2017.
  */
 
-public class List
+public class ShoppingList
 {
     private String list_name;
     private ArrayList<Item> items;
     private int listIndex;
     private int listID;
 
-    public List(String list_name, int listIndex, int listID)
+    public ShoppingList(String list_name, int listIndex, int listID)
     {
         this.items = new ArrayList<Item>();
         this.list_name = list_name;
@@ -29,7 +29,6 @@ public class List
         this.list_name = list_name;
     }
 
-    public void addItem(String item)
     public void addItem(Item item)
     {
         items.add(item);
@@ -50,6 +49,14 @@ public class List
 
     public int getListIndex() {
         return listIndex;
+    }
+
+    public void setListIndex(int listIndex) {
+        this.listIndex = listIndex;
+    }
+
+    public String serialize() {
+        return "";
     }
 
 }
