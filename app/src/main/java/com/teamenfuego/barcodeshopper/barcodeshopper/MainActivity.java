@@ -124,14 +124,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.clearLists) {
+        /*if (id == R.id.clearLists) {
             Menu menu = navigationView.getMenu();
             for (ShoppingList list: myLists.getIterable()) {
                 menu.removeItem(list.getListID());
             }
             myLists = new ListList();
             setHomeScreen();
-        } else if (id == R.id.createNew) {
+        } else*/ if (id == R.id.createNew) {
             int listIndex = myLists.size();
             int listID = View.generateViewId();
 

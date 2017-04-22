@@ -49,7 +49,7 @@ public class Item {
 
         String price = "$0.00";
         String name = "Unnamed item";
-        String seller = "Amazon";
+        String seller = "Nothing";
 
         try {
             URL url = new URL("http://api.upcdatabase.org/xml/0a4a07f05adbdb4d244054fdfa66aea5/" + barcodeID);
@@ -141,7 +141,7 @@ public class Item {
     }
 
     public String toString() {
-        return this.name + ", " + this.seller + "\n" + this.price;
+        return this.name + "\n" + this.seller + "\n" + this.price;
     }
 
 

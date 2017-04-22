@@ -7,10 +7,6 @@
         android:id="@+id/listMenu"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/clearLists"
-            android:icon="@android:drawable/ic_delete"
-            android:title="Clear All Lists" />
-        <item
             android:id="@+id/createNew"
             android:icon="@android:drawable/ic_input_add"
             android:title="Create a new list" />
