@@ -3,29 +3,21 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:tag="entryboxtag"
     android:weightSum="1">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="383dp"
-        android:layout_height="64dp"
-        android:layout_weight="0.62"
-        android:background="#FFFFBB33"
-        android:contentDescription="@string/app_name"
-        android:scaleType="center" />
-
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginTop="16dp"
-        android:inputType="textEmailAddress" />
+        android:inputType="text" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/seller"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -33,5 +25,15 @@
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
         android:fontFamily="sans-serif"
-        android:inputType="textPassword" />
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="16dp"
+        android:inputType="numberDecimal" />
 </LinearLayout>

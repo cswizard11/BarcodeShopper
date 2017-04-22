@@ -15,7 +15,7 @@ public class EntryBox extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(R.id.theEntryBox);
+        builder.setMessage("Enter Item Info").setView(R.layout.entry_box);
         return builder.create();
     }
 }
