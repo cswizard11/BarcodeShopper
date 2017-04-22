@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setNegativeButton("ENTER", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                myLists.getCurrent().addItem(new Item(productText.getText().toString(), sellerText.getText().toString(), priceText.getText().toString(), "-1"));
+                myLists.getCurrent().addItem(new Item(productText.getText().toString(), priceText.getText().toString(), sellerText.getText().toString(), "-1"));
                 renderList(myLists.getCurrent());
                 dialog.cancel();
             }
@@ -285,13 +285,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        builder.setTitle("You're about to delete an item");
+        builder.setTitle("Check item off this list?");
 
-        builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 myLists.getCurrent().removeItem(item);
-                System.out.println("Item Deleted");
                 renderList(myLists.getCurrent());
                 dialog.cancel();
             }
@@ -301,7 +306,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void popupText(String text) {
-        System.out.println("failed)");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(text);
         builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
