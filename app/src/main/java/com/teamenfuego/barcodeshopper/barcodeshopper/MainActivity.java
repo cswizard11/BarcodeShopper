@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ListList myLists = new ListList();
     private String m_Text = "";
 
+    EditText editText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(!myLists.noSelectedList())
                 {
-                    EntryBox popup = new EntryBox();
-                    popup.show(getFragmentManager(), "tag");
-
+                    popupInput();
                 }
             }
         });
@@ -224,6 +224,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void popupInput() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText textView = new EditText(getApplicationContext());
+        textView.setHint("Product");
+        builder.setView(textView);
+        builder.setNegativeButton("ENTER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                myLists.getCurrent().addItem(new Item(textView.getText().toString(), "pizza", "pizza", "pizza"));
+                renderList(myLists.getCurrent());
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     public void popupText(String text) {
