@@ -43,7 +43,7 @@ public class Item implements Runnable {
         System.out.println("The thread has quit");
     }
 
-    public Item(int barcodeID) {
+    public Item(String barcodeID) {
         this("Unamed Item", "$0.00", "Amazon", barcodeID);
         this.barcodeID = barcodeID;
         System.out.println("This is where the thread starts");
@@ -51,7 +51,7 @@ public class Item implements Runnable {
         thread.start();
     }
 
-    public synchronized void stat(int barcodeID) {
+    public synchronized void stat(String barcodeID) {
 
         String price = "$0.00";
         String name = "Unnamed item";
