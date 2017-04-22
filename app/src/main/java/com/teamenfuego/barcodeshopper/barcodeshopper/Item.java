@@ -27,10 +27,10 @@ public class Item implements Runnable {
     private String name;
     private String price;
     private String seller;
-    private int barcodeID;
+    private String barcodeID;
     private boolean checked = false, xed = false;
 
-    public Item(String name, String price, String seller, int barcodeID) {
+    public Item(String name, String price, String seller, String barcodeID) {
         this.name = name;
         this.price = price;
         this.seller = seller;
@@ -60,7 +60,6 @@ public class Item implements Runnable {
         try {
             URL url = new URL("http://api.upcdatabase.org/xml/0a4a07f05adbdb4d244054fdfa66aea5/" + barcodeID);
             URLConnection conn = url.openConnection();
-            System.out.println(barcodeID);
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
