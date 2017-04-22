@@ -26,6 +26,7 @@ public class Item {
     private String price;
     private String seller;
     private int barcodeID;
+    private boolean checked = false, xed = false;
 
     public Item(String name, String price, String seller, int barcodeID) {
         this.name = name;
@@ -108,6 +109,41 @@ public class Item {
 
     public String toString() {
         return this.name + ", " + this.seller + "\n" + this.price;
+    }
+
+
+    public void checkItem(){
+        this.checked = true;
+        this.xed = false;
+    }
+
+    public void uncheckItem(){
+        this.checked = false;
+    }
+
+    public void flipCheck(){
+        this.checked = ! this.checked;
+    }
+
+    public void xItem(){
+        this.xed = true;
+        this.checked = false;
+    }
+
+    public void unXItem(){
+        this.xed = false;
+    }
+
+    public void flipX(){
+        this.xed = ! xed;
+    }
+
+    public boolean isChecked() {
+        return this.checked;
+    }
+
+    public boolean isXed() {
+        return this.xed;
     }
 
 }
