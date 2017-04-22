@@ -22,6 +22,10 @@ public class ListList {
         currentList = this.shoppingLists.size() - 1;
     }
 
+    public void remove(ShoppingList list) {
+        this.shoppingLists.remove(shoppingLists.indexOf(list));
+    }
+
     public ShoppingList get(int index) {
         return shoppingLists.get(index);
     }

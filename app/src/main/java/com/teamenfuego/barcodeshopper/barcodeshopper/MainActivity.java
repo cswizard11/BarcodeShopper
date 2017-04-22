@@ -1,5 +1,6 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
@@ -47,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ListList emptyList = new ListList();
     ShoppingList emptyShoppingList = new ShoppingList(0,0);
 
-
-
     EditText editText;
 
     @Override
@@ -94,11 +93,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                System.out.println("********You're about to delete an item**************");
-                System.out.println(view);
-                System.out.println(position);
-                System.out.println(id);
-
                 popupDelete(myLists.getCurrent().getItem((int)id));
             }
         });
@@ -132,28 +126,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 menu.removeItem(list.getListID());
             }
             myLists = new ListList();
-            TextView text = (TextView)findViewById(R.id.Title);
-            text.setText("Home Screen");
-            ListView currentListView = (ListView)findViewById(R.id.item_list);
-            ListAdapter listAdapter = new ListAdapter(getApplicationContext(), emptyList.getCurrent().getItems());
-            currentListView.setAdapter(listAdapter);
-
+            setHomeScreen();
         } else if (id == R.id.createNew) {
             int listIndex = myLists.size();
             int listID = View.generateViewId();
 
             ShoppingList list1 = new ShoppingList(listIndex, listID);
             myLists.add(list1);
-            addListToSidebar(list1);
-            renderList(myLists.getCurrent());
+            popupNameList();
         }
         else
         {
-            for(ShoppingList the_list: myLists.getIterable())
+            for(int i = 0; i < myLists.size(); i++)
             {
+                ShoppingList the_list = myLists.get(i);
                 if(id == the_list.getListID())
                 {
-                    myLists.setCurrentList(the_list.getListIndex());
+                    myLists.setCurrentList(i);
                     renderList(myLists.getCurrent());
                 }
             }
@@ -178,14 +167,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void addListToSidebar(ShoppingList list) {
         Menu menu = navigationView.getMenu();
-        menu.add(R.id.listMenu, list.getListID(), Menu.NONE, list.getName());
+        menu.add(R.id.listMenu, list.getListID(), Menu.NONE, list.getList_name());
     }
+
+    private void removeListFromSidebar(ShoppingList list) {
+        Menu menu = navigationView.getMenu();
+        menu.removeItem(list.getListID());
+    }
+
 
     public void openCamera()
     {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setOrientationLocked(false);
+        integrator.setOrientationLocked(true);
         integrator.initiateScan();
     }
 
@@ -206,13 +201,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Thread thread = new Thread(this);
             thread.start();
             renderList(myLists.getCurrent());
-            /*
-            System.out.println("\"" + result.getContents()+ "\"");
-            Item item = new Item(result.getContents());
-            myLists.getCurrent().addItem(item);
-            System.out.println(myLists.getCurrent());
-            renderList(myLists.getCurrent());
-            */
+        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_list:
+                removeListFromSidebar(myLists.getCurrent());
+                myLists.remove(myLists.getCurrent());
+                setHomeScreen();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -316,6 +322,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         builder.show();
+    }
+
+    public void popupNameList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Name your new shopping list:");
+        final EditText editText = new EditText(this);
+        builder.setView(editText);
+        builder.setNegativeButton("ENTER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                myLists.getCurrent().setList_name(editText.getText().toString());
+                addListToSidebar(myLists.getCurrent());
+                renderList(myLists.getCurrent());
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void setHomeScreen() {
+        TextView text = (TextView)findViewById(R.id.Title);
+        text.setText("Home Screen");
+        ListView currentListView = (ListView)findViewById(R.id.item_list);
+        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), emptyList.getCurrent().getItems());
+        currentListView.setAdapter(listAdapter);
+        myLists.setCurrentList(0);
     }
 
 }

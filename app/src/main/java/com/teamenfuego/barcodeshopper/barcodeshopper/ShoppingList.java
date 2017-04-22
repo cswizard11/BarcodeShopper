@@ -14,14 +14,12 @@ public class ShoppingList
 
     private String list_name;
     private ArrayList<Item> items;
-    private int listIndex;
     private int listID;
 
     public ShoppingList(int listIndex, int listID)
     {
         this.items = new ArrayList<Item>();
         this.list_name = NAME_PREFIX + (listIndex + 1);
-        this.listIndex = listIndex;
         this.listID = listID;
     }
 
@@ -59,18 +57,6 @@ public class ShoppingList
 
     public void setListID(int listID) {
         this.listID = listID;
-    }
-
-    public int getListIndex() {
-        return listIndex;
-    }
-
-    public void setListIndex(int listIndex) {
-        this.listIndex = listIndex;
-    }
-
-    public String getName() {
-        return NAME_PREFIX + (getListIndex() + 1);
     }
 
     public void deleteCheckedItems() {
