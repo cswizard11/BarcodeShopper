@@ -22,7 +22,7 @@ package com.teamenfuego.barcodeshopper.barcodeshopper;
  * Created by isaac on 4/21/17.
  */
 
-public class Item implements Runnable {
+public class Item {
 
     private String name;
     private String price;
@@ -36,12 +36,14 @@ public class Item implements Runnable {
         this.seller = seller;
         this.barcodeID = barcodeID;
     }
+    /*
     public void run() {
         System.out.println("The thread is running");
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         stat(this.barcodeID);
         System.out.println("The thread has quit");
     }
+
 
     public Item(String barcodeID) {
         this("Unamed Item", "$0.00", "Amazon", barcodeID);
@@ -50,24 +52,32 @@ public class Item implements Runnable {
         Thread thread = new Thread();
         thread.start();
     }
+    */
 
-    public synchronized void stat(String barcodeID) {
+    public Item(String barcodeID) {
+        this("NoName", "$0.50","Sell, Sell, Sell",barcodeID);
 
         String price = "$0.00";
         String name = "Unnamed item";
         String seller = "Amazon";
 
         try {
+            System.out.println("Entered lookup");
             URL url = new URL("http://api.upcdatabase.org/xml/0a4a07f05adbdb4d244054fdfa66aea5/" + barcodeID);
             URLConnection conn = url.openConnection();
+            //System.out.println("Exit lookup");
 
+            System.out.println("1");
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            System.out.println("1");
             DocumentBuilder builder = factory.newDocumentBuilder();
+            System.out.println("2");
             Document doc = builder.parse(conn.getInputStream());
+            System.out.println("3");
 
             doc.getDocumentElement().normalize();
 
-            //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 
             NodeList nList = doc.getElementsByTagName("output");
 
@@ -99,7 +109,7 @@ public class Item implements Runnable {
                             return;
                         } else {
                             itemname = eElement.getElementsByTagName("description").item(0).getTextContent();
-                            if (itemname.equals("")) {
+                            if (! itemname.equals("")) {
                                 name = itemname;
                                 assign(name, price, seller);
                                 return;
@@ -112,6 +122,7 @@ public class Item implements Runnable {
                 }
             }
         } catch (Exception e) {
+            assign(name, price, seller);
             e.printStackTrace();
             return;
         }

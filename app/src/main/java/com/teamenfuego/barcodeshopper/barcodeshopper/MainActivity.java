@@ -37,14 +37,17 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Runnable {
 
     public static final String OUTPUT_FILE = "shoppingLists.json";
 
     private NavigationView navigationView;
 
     public ListList myLists = new ListList();
-    private String m_Text = "";
+    public ListList emptyList = new ListList();
+    ShoppingList emptyShoppingList = new ShoppingList(0,0);
+
+
 
     EditText editText;
 
@@ -55,65 +58,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        emptyList.add(emptyShoppingList);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 openCamera();
-
             }
         });
 
         FloatingActionButton addItemButton = (FloatingActionButton) findViewById(R.id.addItemButton);
-        addItemButton.setOnClickListener(new View.OnClickListener(){
+        addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if(!myLists.noSelectedList())
-                {
+            public void onClick(View view) {
+                if (!myLists.noSelectedList()) {
                     popupInput();
                 }
             }
         });
 
-        ListView listView = (ListView) findViewById(R.id.item_list);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                popupDeleteItem(position);
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         loadListsFromFile();
-    }
 
-    public void onPopupComplete(View view) {
-        setContentView(R.layout.entry_box);
-        EditText product = (EditText) findViewById(R.id.product);
-        EditText price = (EditText) findViewById(R.id.price);
-        EditText seller = (EditText) findViewById(R.id.seller);
-        System.out.println(product.getText());
-        String product1 = product.getText().toString();
-        String price1 = price.getText().toString();
-        String seller1 = seller.getText().toString();
-        setContentView(R.layout.activity_main);
-        myLists.getCurrent().addItem(new Item(product1, price1, seller1, "10231920"));
         ListView currentListView = (ListView) findViewById(R.id.item_list);
-        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.getCurrent().getItems());
-        currentListView.setAdapter(listAdapter);
-        //View productView = new View()
+
+        currentListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                System.out.println("********You're about to delete an item**************");
+                System.out.println(view);
+                System.out.println(position);
+                System.out.println(id);
+
+                popupDelete(myLists.getCurrent().getItem((int)id));
+            }
+        });
     }
 
-        @Override
+    @Override
     public void onStop() {
         super.onStop();
         writeListsToFile();
@@ -141,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 menu.removeItem(list.getListID());
             }
             myLists = new ListList();
+            TextView text = (TextView)findViewById(R.id.Title);
+            text.setText("Home Screen");
+            ListView currentListView = (ListView)findViewById(R.id.item_list);
+            ListAdapter listAdapter = new ListAdapter(getApplicationContext(), emptyList.getCurrent().getItems());
+            currentListView.setAdapter(listAdapter);
+
         } else if (id == R.id.createNew) {
             int listIndex = myLists.size();
             int listID = View.generateViewId();
@@ -177,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         text.setText(myLists.getCurrent().getList_name());
     }
 
+
+
     private void addListToSidebar(ShoppingList list) {
         Menu menu = navigationView.getMenu();
         menu.add(R.id.listMenu, list.getListID(), Menu.NONE, list.getName());
@@ -190,16 +189,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         integrator.initiateScan();
     }
 
+    public void run() {
+        myLists.getCurrent().addItem(new Item(this.resul.getContents()));
+        System.out.println(myLists.getCurrent());
+        this.resul = null;
+    }
+
+    IntentResult resul;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (result != null) {
+            this.resul = result;
+            Thread thread = new Thread(this);
+            thread.start();
+            renderList(myLists.getCurrent());
+            /*
             System.out.println("\"" + result.getContents()+ "\"");
             Item item = new Item(result.getContents());
             myLists.getCurrent().addItem(item);
             System.out.println(myLists.getCurrent());
             renderList(myLists.getCurrent());
+            */
         }
     }
 
@@ -267,20 +280,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.show();
     }
 
-    public void popupDeleteItem(final int index) {
+    public void popupDelete(final Item item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Are you sure you want to delete this item?");
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        builder.setTitle("You're about to delete an item");
+
+        builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                myLists.getCurrent().removeItem(item);
+                System.out.println("Item Deleted");
+                renderList(myLists.getCurrent());
                 dialog.cancel();
             }
         });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+        builder.show();
+    }
+
+    public void popupText(String text) {
+        System.out.println("failed)");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(text);
+        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                myLists.getCurrent().getItems().remove(index);
-                renderList(myLists.getCurrent());
                 dialog.cancel();
             }
         });
