@@ -33,7 +33,7 @@ public class ShoppingList
         this.list_name = list_name;
     }
 
-    public void addItem(Item item)
+    public synchronized void addItem(Item item)
     {
         items.add(item);
     }
@@ -83,6 +83,14 @@ public class ShoppingList
                 it.remove();
             }
         }
+    }
+
+    public String toString() {
+        String res = "[";
+        for (Item item: items) {
+            res += item + ", ";
+        }
+        return res + "]";
     }
 
 }

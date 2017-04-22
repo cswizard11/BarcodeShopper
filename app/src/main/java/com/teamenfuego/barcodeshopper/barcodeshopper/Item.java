@@ -1,8 +1,6 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
 
-        import android.os.Process;
-
         import java.io.IOException;
         import java.net.URL;
         import java.net.URLConnection;
@@ -22,33 +20,23 @@ package com.teamenfuego.barcodeshopper.barcodeshopper;
  * Created by isaac on 4/21/17.
  */
 
-public class Item implements Runnable {
+public class Item {
 
     private String name;
     private String price;
     private String seller;
-    private int barcodeID;
+    private String barcodeID;
     private boolean checked = false, xed = false;
 
-    public Item(String name, String price, String seller, int barcodeID) {
+    public Item(String name, String price, String seller, String barcodeID) {
         this.name = name;
         this.price = price;
         this.seller = seller;
         this.barcodeID = barcodeID;
     }
-    public void run() {
-        android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-        stat(this.barcodeID);
-    }
 
-    public Item(int barcodeID) {
+    public Item(String barcodeID) {
         this("Unamed Item", "$0.00", "Amazon", barcodeID);
-        this.barcodeID = barcodeID;
-        Thread thread = new Thread();
-        thread.start();
-    }
-
-    public void stat(int barcodeID) {
 
         String price = "$0.00";
         String name = "Unnamed item";
