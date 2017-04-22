@@ -1,6 +1,8 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
 
+        import android.os.Process;
+
         import java.io.IOException;
         import java.net.URL;
         import java.net.URLConnection;
@@ -20,7 +22,7 @@ package com.teamenfuego.barcodeshopper.barcodeshopper;
  * Created by isaac on 4/21/17.
  */
 
-public class Item {
+public class Item implements Runnable {
 
     private String name;
     private String price;
@@ -35,8 +37,19 @@ public class Item {
         this.barcodeID = barcodeID;
     }
 
+    public void run() {
+        android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+        stat(this.barcodeID);
+    }
+
     public Item(int barcodeID) {
         this("Unamed Item", "$0.00", "Amazon", barcodeID);
+        this.barcodeID = barcodeID;
+        Thread thread = new Thread();
+        thread.start();
+    }
+
+    public void stat(int barcodeID) {
 
         String price = "$0.00";
         String name = "Unnamed item";
@@ -72,19 +85,19 @@ public class Item {
 
                     //finds itemname in one of three places or defaults to assignments above
                     String itemname = eElement.getElementsByTagName("itemname").item(0).getTextContent();
-                    if (itemname != "") {
+                    if (! itemname.equals("")) {
                         name = itemname;
                         assign(name, price, seller);
                         return;
                     } else {
                         itemname = eElement.getElementsByTagName("alias").item(0).getTextContent();
-                        if (itemname != "") {
+                        if (! itemname.equals("")) {
                             name = itemname;
                             assign(name, price, seller);
                             return;
                         } else {
                             itemname = eElement.getElementsByTagName("description").item(0).getTextContent();
-                            if (itemname != "") {
+                            if (itemname.equals("")) {
                                 name = itemname;
                                 assign(name, price, seller);
                                 return;
