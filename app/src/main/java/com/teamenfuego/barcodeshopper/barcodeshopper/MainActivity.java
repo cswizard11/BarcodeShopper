@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -44,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ListList myLists = new ListList();
     private String m_Text = "";
 
+    private EntryBox popup;
+    private EditText product;
+    private EditText price;
+    private EditText seller;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,16 +67,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
         FloatingActionButton addItemButton = (FloatingActionButton) findViewById(R.id.addItemButton);
         addItemButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view)
             {
-                if(myLists.noSelectedList())
-                {
-                    EntryBox popup = new EntryBox();
-                    popup.show(getFragmentManager(), "tag");
 
+                if(!myLists.noSelectedList())
+                {
+                    popup = new EntryBox();
+                    popup.show(getFragmentManager(), "tag");
                 }
             }
         });
@@ -84,22 +91,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         loadListsFromFile();
+
+        final LayoutInflater factory = getLayoutInflater();
+        final View entryBoxView = factory.inflate(R.layout.entry_box, null);
+        product = (EditText) entryBoxView.findViewById(R.id.product);
+        price = (EditText) entryBoxView.findViewById(R.id.price);
+        seller = (EditText) entryBoxView.findViewById(R.id.seller);
     }
 
     public void onPopupComplete(View view) {
-        setContentView(R.layout.entry_box);
-        EditText product = (EditText) findViewById(R.id.product);
-        EditText price = (EditText) findViewById(R.id.price);
-        EditText seller = (EditText) findViewById(R.id.seller);
-        System.out.println(product.getText());
         String product1 = product.getText().toString();
         String price1 = price.getText().toString();
         String seller1 = seller.getText().toString();
-        setContentView(R.layout.activity_main);
-        myLists.get(currentList - 1).addItem(new Item(product1, price1, seller1, 10231920));
+        System.out.println("PRODUCT: " + product.getText());
+        myLists.getCurrent().addItem(new Item(product1, price1, seller1, 10231920));
         ListView currentListView = (ListView) findViewById(R.id.item_list);
-        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
+        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.getCurrent().getItems());
         currentListView.setAdapter(listAdapter);
+        popup.dismiss();
         //View productView = new View()
     }
 

@@ -55,6 +55,7 @@ public class ListList {
     }
 
     public boolean noSelectedList() {
+        System.out.println(this.currentList);
         return this.currentList == -1;
     }
 
