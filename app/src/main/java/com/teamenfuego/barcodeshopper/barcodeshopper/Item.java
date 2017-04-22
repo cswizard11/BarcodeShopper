@@ -37,18 +37,21 @@ public class Item implements Runnable {
         this.barcodeID = barcodeID;
     }
     public void run() {
+        System.out.println("The thread is running");
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         stat(this.barcodeID);
+        System.out.println("The thread has quit");
     }
 
     public Item(int barcodeID) {
         this("Unamed Item", "$0.00", "Amazon", barcodeID);
         this.barcodeID = barcodeID;
+        System.out.println("This is where the thread starts");
         Thread thread = new Thread();
         thread.start();
     }
 
-    public void stat(int barcodeID) {
+    public synchronized void stat(int barcodeID) {
 
         String price = "$0.00";
         String name = "Unnamed item";
@@ -57,6 +60,7 @@ public class Item implements Runnable {
         try {
             URL url = new URL("http://api.upcdatabase.org/xml/0a4a07f05adbdb4d244054fdfa66aea5/" + barcodeID);
             URLConnection conn = url.openConnection();
+            System.out.println(barcodeID);
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -109,6 +113,7 @@ public class Item implements Runnable {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return;
         }
     }
