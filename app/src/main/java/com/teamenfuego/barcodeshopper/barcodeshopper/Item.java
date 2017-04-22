@@ -47,9 +47,9 @@ public class Item {
     public Item(String barcodeID) {
         this("NoName", "$0.50","Sell, Sell, Sell",barcodeID);
 
-        String price = "$0.00";
+        String price = "";
         String name = "Unnamed item";
-        String seller = "Nothing";
+        String seller = "";
 
         try {
             URL url = new URL("http://api.upcdatabase.org/xml/0a4a07f05adbdb4d244054fdfa66aea5/" + barcodeID);
