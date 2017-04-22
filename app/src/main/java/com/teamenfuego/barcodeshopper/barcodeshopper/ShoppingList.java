@@ -38,9 +38,19 @@ public class ShoppingList
         items.add(item);
     }
 
+    public void removeItem(Item item)
+    {
+        items.remove(item);
+    }
+
     public ArrayList<Item> getItems()
     {
         return items;
+    }
+
+    public Item getItem(int place)
+    {
+        return items.get(place);
     }
 
     public int getListID() {
