@@ -1,6 +1,7 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ public class ListAdapter extends ArrayAdapter<Item>
     {
         Item item_position = getItem(position);
         TextView text = new TextView(getContext());
+        text.setTextSize(20);
+        text.setTextColor(Color.BLACK);
         text.setText(item_position.toString());
 
         return text;

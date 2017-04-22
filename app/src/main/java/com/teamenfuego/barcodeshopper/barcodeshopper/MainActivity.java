@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -73,6 +74,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     popupInput();
                 }
+            }
+        });
+
+        ListView listView = (ListView) findViewById(R.id.item_list);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                popupDeleteItem(position);
             }
         });
 
@@ -258,13 +267,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.show();
     }
 
-    public void popupText(String text) {
-        System.out.println("failed)");
+    public void popupDeleteItem(final int index) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(text);
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        builder.setTitle("Are you sure you want to delete this item?");
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                myLists.getCurrent().getItems().remove(index);
+                renderList(myLists.getCurrent());
                 dialog.cancel();
             }
         });
