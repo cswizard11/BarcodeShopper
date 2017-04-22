@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     public ListList myLists = new ListList();
-    public int currentList = R.id.createNew;
     private String m_Text = "";
 
     @Override
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view)
             {
-                if(currentList != R.id.createNew)
+                if(myLists.noSelectedList())
                 {
                     EntryBox popup = new EntryBox();
                     popup.show(getFragmentManager(), "tag");
@@ -75,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -128,15 +125,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.createNew) {
-            int listIndex = myLists.size() + 1;
+        if (id == R.id.clearLists) {
+            Menu menu = navigationView.getMenu();
+            for (ShoppingList list: myLists.getIterable()) {
+                menu.removeItem(list.getListID());
+            }
+            myLists = new ListList();
+        } else if (id == R.id.createNew) {
+            int listIndex = myLists.size();
             int listID = View.generateViewId();
 
-            ShoppingList list1 = new ShoppingList("List Number " + listIndex, listIndex, listID);
+            ShoppingList list1 = new ShoppingList(listIndex, listID);
             myLists.add(list1);
             addListToSidebar(list1);
-            currentList = list1.getListIndex();
-            renderList(currentList);
+            renderList(myLists.getCurrent());
         }
         else
         {
@@ -144,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(id == the_list.getListID())
                 {
-                    currentList = the_list.getListIndex();
-                    renderList(currentList);
+                    myLists.setCurrentList(the_list.getListIndex());
+                    renderList(myLists.getCurrent());
                 }
             }
         }
@@ -156,18 +158,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void renderList(int listIndex)
+    public void renderList(ShoppingList list)
     {
         ListView currentListView =(ListView)findViewById(R.id.item_list);
-        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
+        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), list.getItems());
         currentListView.setAdapter(listAdapter);
         TextView text = (TextView)findViewById(R.id.Title);
-        text.setText(myLists.get(currentList - 1).getList_name());
+        text.setText(myLists.getCurrent().getList_name());
     }
 
     private void addListToSidebar(ShoppingList list) {
         Menu menu = navigationView.getMenu();
-        menu.add(R.id.listMenu, list.getListID(), Menu.NONE, "List Number " + list.getListIndex());
+        menu.add(R.id.listMenu, list.getListID(), Menu.NONE, list.getName());
     }
 
     public void openCamera()
