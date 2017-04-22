@@ -36,7 +36,6 @@ public class Item implements Runnable {
         this.seller = seller;
         this.barcodeID = barcodeID;
     }
-
     public void run() {
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         stat(this.barcodeID);
