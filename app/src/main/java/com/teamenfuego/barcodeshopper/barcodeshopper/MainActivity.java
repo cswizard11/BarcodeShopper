@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     EditText editText;
 
+    private boolean scannerWorked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,7 +187,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void run() {
-        myLists.getCurrent().addItem(new Item(this.resul.getContents()));
+        scannerWorked = true;
+        Item newItem = new Item(this.resul.getContents());
+        if (!newItem.getName().equals("Unnamed item")) {
+            myLists.getCurrent().addItem(newItem);
+        } else {
+            scannerWorked = false;
+        }
         System.out.println(myLists.getCurrent());
         this.resul = null;
     }
@@ -193,14 +201,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     IntentResult resul;
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    public synchronized void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (result != null) {
             this.resul = result;
             Thread thread = new Thread(this);
             thread.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             renderList(myLists.getCurrent());
+            if (!scannerWorked) {
+                popupInput();
+            }
         }
     }
 
