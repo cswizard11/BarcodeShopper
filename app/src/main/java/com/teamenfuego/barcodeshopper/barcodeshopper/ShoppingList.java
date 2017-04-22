@@ -23,6 +23,12 @@ public class ShoppingList
         this.listID = listID;
     }
 
+    public ShoppingList(ShoppingList other) {
+        this.items = other.getItems();
+        this.list_name = other.getList_name();
+        this.listID = other.getListID();
+    }
+
     public String getList_name() {
         return list_name;
     }
@@ -57,6 +63,10 @@ public class ShoppingList
 
     public void setListID(int listID) {
         this.listID = listID;
+    }
+
+    public int size() {
+        return items.size();
     }
 
     public void deleteCheckedItems() {

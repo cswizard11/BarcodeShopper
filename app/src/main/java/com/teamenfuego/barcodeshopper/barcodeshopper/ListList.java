@@ -12,9 +12,12 @@ public class ListList {
     private List<ShoppingList> shoppingLists;
     private int currentList;
 
+    private List<Item> addedCodes;
+
     public ListList() {
         this.shoppingLists = new ArrayList<ShoppingList>();
         this.currentList = -1;
+        this.addedCodes = new ArrayList<Item>();
     }
 
     public void add(ShoppingList list) {
@@ -58,9 +61,26 @@ public class ListList {
         this.currentList = newList;
     }
 
+    public List<Item> getAddedCodes() {
+        return addedCodes;
+    }
+
     public boolean noSelectedList() {
         System.out.println(this.currentList);
         return this.currentList == -1;
+    }
+
+    public void addNewCode(Item list) {
+        addedCodes.add(list);
+    }
+
+    public Item checkBarcodeInCodes(String barcode) {
+        for (Item item : addedCodes) {
+            if (item.getBarcode().equals(barcode)) {
+                return item;
+            }
+        }
+        return null;
     }
 
 }

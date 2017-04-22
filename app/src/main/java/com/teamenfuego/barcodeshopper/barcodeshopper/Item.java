@@ -37,6 +37,13 @@ public class Item {
         this.barcodeID = barcodeID;
     }
 
+    public Item(Item other) {
+        this.name = other.getName();
+        this.price = other.price;
+        this.seller = other.seller;
+        this.barcodeID = other.getBarcode();
+    }
+
     public Item(String barcodeID) {
         this("NoName", "$0.50","Sell, Sell, Sell",barcodeID);
 
@@ -45,18 +52,12 @@ public class Item {
         String seller = "Amazon";
 
         try {
-            System.out.println("Entered lookup");
             URL url = new URL("http://api.upcdatabase.org/xml/0a4a07f05adbdb4d244054fdfa66aea5/" + barcodeID);
             URLConnection conn = url.openConnection();
-            //System.out.println("Exit lookup");
 
-            System.out.println("1");
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            System.out.println("1");
             DocumentBuilder builder = factory.newDocumentBuilder();
-            System.out.println("2");
             Document doc = builder.parse(conn.getInputStream());
-            System.out.println("3");
 
             doc.getDocumentElement().normalize();
 
@@ -75,23 +76,32 @@ public class Item {
                     Element eElement = (Element) nNode;
 
                     //price is assigned
-                    price = eElement.getElementsByTagName("avgprice").item(0).getTextContent();
+                    NodeList price1 = eElement.getElementsByTagName("avgprice");
+                    if (price1 != null && price1.getLength() > 0)
+                        price = price1.item(0).getTextContent();
 
 
                     //finds itemname in one of three places or defaults to assignments above
-                    String itemname = eElement.getElementsByTagName("itemname").item(0).getTextContent();
+                    String itemname = "";
+                    NodeList itemname1 = eElement.getElementsByTagName("itemname");
+                    if (itemname1 != null && itemname1.getLength() > 0)
+                        itemname = itemname1.item(0).getTextContent();
                     if (! itemname.equals("")) {
                         name = itemname;
                         assign(name, price, seller);
                         return;
                     } else {
-                        itemname = eElement.getElementsByTagName("alias").item(0).getTextContent();
+                        itemname1 = eElement.getElementsByTagName("alias");
+                        if (itemname1 != null && itemname1.getLength() > 0)
+                            itemname = itemname1.item(0).getTextContent();
                         if (! itemname.equals("")) {
                             name = itemname;
                             assign(name, price, seller);
                             return;
                         } else {
-                            itemname = eElement.getElementsByTagName("description").item(0).getTextContent();
+                            itemname1 = eElement.getElementsByTagName("description");
+                            if (itemname1 != null && itemname1.getLength() > 0)
+                                itemname = itemname1.item(0).getTextContent();
                             if (! itemname.equals("")) {
                                 name = itemname;
                                 assign(name, price, seller);
@@ -115,6 +125,19 @@ public class Item {
         this.name = name;
         this.price = price;
         this.seller = seller;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getBarcode() {
+        return barcodeID;
+    }
+
+    public Item setBarcode(String barcode) {
+        this.barcodeID = barcode;
+        return this;
     }
 
     public String toString() {

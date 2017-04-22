@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     EditText editText;
 
     private boolean scannerWorked;
+    private String scannerResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,14 +189,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void run() {
-        scannerWorked = true;
         Item newItem = new Item(this.resul.getContents());
+        scannerWorked = true;
+        scannerResult = newItem.getBarcode();
         if (!newItem.getName().equals("Unnamed item")) {
             myLists.getCurrent().addItem(newItem);
         } else {
             scannerWorked = false;
         }
-        System.out.println(myLists.getCurrent());
         this.resul = null;
     }
 
@@ -216,7 +217,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             renderList(myLists.getCurrent());
             if (!scannerWorked) {
-                popupInput();
+                boolean doIt = true;
+                for (int i = 0; i < myLists.getAddedCodes().size(); i++) {
+                    System.out.println(myLists.getAddedCodes().get(i));
+                    Item code = myLists.getAddedCodes().get(i);
+                    if (scannerResult.equals(code.getBarcode())) {
+                        doIt = false;
+                        myLists.getCurrent().addItem(new Item(code));
+                        renderList(myLists.getCurrent());
+                        break;
+                    }
+                }
+                if (doIt) {
+                    popupInputNumber2();
+                }
+                for (Item list: myLists.getAddedCodes()) {
+                    System.out.println(list);
+                }
             }
         }
     }
@@ -302,6 +319,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         builder.setView(layout);
 
+        Item item;
+
         builder.setNegativeButton("ENTER", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -377,6 +396,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ListAdapter listAdapter = new ListAdapter(getApplicationContext(), emptyList.getCurrent().getItems());
         currentListView.setAdapter(listAdapter);
         myLists.setCurrentList(0);
+    }
+
+    public void popupInputNumber2() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText productText = new EditText(getApplicationContext());
+        productText.setTextColor(Color.BLACK);
+        productText.setHintTextColor(Color.GRAY);
+        productText.setHint("Product");
+        layout.addView(productText);
+
+
+        final EditText sellerText = new EditText(getApplicationContext());
+        sellerText.setTextColor(Color.BLACK);
+        sellerText.setHintTextColor(Color.GRAY);
+        sellerText.setHint("Seller");
+        layout.addView(sellerText);
+
+
+        final EditText priceText = new EditText(getApplicationContext());
+        priceText.setTextColor(Color.BLACK);
+        priceText.setHintTextColor(Color.GRAY);
+        priceText.setHint("Price");
+        layout.addView(priceText);
+
+
+        builder.setView(layout);
+
+        Item item;
+
+        builder.setPositiveButton("ENTER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Item item = new Item(productText.getText().toString(), priceText.getText().toString(), sellerText.getText().toString(), scannerResult);
+                myLists.getCurrent().addItem(item);
+                myLists.addNewCode(item);
+                dialog.cancel();
+                renderList(myLists.getCurrent());
+            }
+        });
+
+        builder.show();
     }
 
 }
