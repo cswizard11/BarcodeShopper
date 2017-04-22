@@ -206,15 +206,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //        FileOutputStream outputStream;
-//        Gson gson = new Gson();
-//        try {
-//            outputStream = openFileOutput("shoppingLists.json", Context.MODE_PRIVATE);
-//            outputStream.write(gson.toJson(myLists).getBytes());
-//            outputStream.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
 }
