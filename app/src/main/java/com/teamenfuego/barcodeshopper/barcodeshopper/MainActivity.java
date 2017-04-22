@@ -67,13 +67,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(myLists.noSelectedList())
                 {
-                    myLists.getCurrent().addItem(new Item("PRODUCT", "5 dollars", "MCDONALDS", 10231920));
+                    EntryBox popup = new EntryBox();
+                    //popup.show(getFragmentManager(), popup.getTag());
+                    myLists.get(currentList - 1).addItem(new Item(popup.getTag(), "5 dollars", "MCDONALDS", 10231920));
                     ListView currentListView =(ListView)findViewById(R.id.item_list);
                     ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.getCurrent().getItems());
                     currentListView.setAdapter(listAdapter);
-                    //View productView = new View();
-                    EntryBox popup = new EntryBox();
-                    //popup.show();
+                    //View productView = new View()
+                    popup.show(getFragmentManager(), "tag");
                 }
             }
         });
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         loadListsFromFile();
     }
 
@@ -138,9 +138,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
-
-        //TextView text = (TextView)findViewById(R.id.textView3);
-        //text.setText("" + currentList);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
