@@ -1,6 +1,8 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
 
+        import android.os.Process;
+
         import java.io.IOException;
         import java.net.URL;
         import java.net.URLConnection;
@@ -20,7 +22,7 @@ package com.teamenfuego.barcodeshopper.barcodeshopper;
  * Created by isaac on 4/21/17.
  */
 
-public class Item {
+public class Item implements Runnable {
 
     private String name;
     private String price;
@@ -34,9 +36,22 @@ public class Item {
         this.seller = seller;
         this.barcodeID = barcodeID;
     }
+    public void run() {
+        System.out.println("The thread is running");
+        android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+        stat(this.barcodeID);
+        System.out.println("The thread has quit");
+    }
 
     public Item(String barcodeID) {
         this("Unamed Item", "$0.00", "Amazon", barcodeID);
+        this.barcodeID = barcodeID;
+        System.out.println("This is where the thread starts");
+        Thread thread = new Thread();
+        thread.start();
+    }
+
+    public synchronized void stat(String barcodeID) {
 
         String price = "$0.00";
         String name = "Unnamed item";
@@ -97,6 +112,7 @@ public class Item {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return;
         }
     }
