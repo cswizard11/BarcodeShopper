@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -69,16 +70,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(currentList != R.id.createNew)
                 {
                     EntryBox popup = new EntryBox();
-                    //popup.show(getFragmentManager(), popup.getTag());
-                    myLists.get(currentList - 1).addItem(new Item(popup.getTag(), "5 dollars", "MCDONALDS", 10231920));
-                    ListView currentListView =(ListView)findViewById(R.id.item_list);
-                    ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
-                    currentListView.setAdapter(listAdapter);
-                    //View productView = new View()
                     popup.show(getFragmentManager(), "tag");
+
                 }
             }
         });
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -91,7 +89,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadListsFromFile();
     }
 
-    @Override
+    public void onPopupComplete(View view) {
+        setContentView(R.layout.entry_box);
+        EditText product = (EditText) findViewById(R.id.product);
+        EditText price = (EditText) findViewById(R.id.price);
+        EditText seller = (EditText) findViewById(R.id.seller);
+        System.out.println(product.getText());
+        String product1 = product.getText().toString();
+        String price1 = price.getText().toString();
+        String seller1 = seller.getText().toString();
+        setContentView(R.layout.activity_main);
+        myLists.get(currentList - 1).addItem(new Item(product1, price1, seller1, 10231920));
+        ListView currentListView = (ListView) findViewById(R.id.item_list);
+        ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.get(currentList - 1).getItems());
+        currentListView.setAdapter(listAdapter);
+        //View productView = new View()
+    }
+
+        @Override
     public void onStop() {
         super.onStop();
         writeListsToFile();
