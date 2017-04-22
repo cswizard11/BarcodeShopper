@@ -35,8 +35,7 @@ public class Item {
     }
 
     public Item(int barcodeID) {
-        //contact sellers
-        this("Default", "0.0", "Default", barcodeID);
+        this("Unamed Item", "$0.00", "Amazon", barcodeID);
 
         String price = "$0.00";
         String name = "Unnamed item";

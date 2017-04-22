@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     EntryBox popup = new EntryBox();
                     //popup.show(getFragmentManager(), popup.getTag());
-                    myLists.get(currentList - 1).addItem(new Item(popup.getTag(), "5 dollars", "MCDONALDS", 10231920));
+                    myLists.getCurrent().addItem(new Item(popup.getTag(), "5 dollars", "MCDONALDS", 10231920));
                     ListView currentListView =(ListView)findViewById(R.id.item_list);
                     ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.getCurrent().getItems());
                     currentListView.setAdapter(listAdapter);
