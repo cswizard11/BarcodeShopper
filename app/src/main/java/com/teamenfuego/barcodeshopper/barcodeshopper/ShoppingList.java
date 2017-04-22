@@ -1,6 +1,7 @@
 package com.teamenfuego.barcodeshopper.barcodeshopper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.jar.Attributes;
 
 /**
@@ -60,6 +61,28 @@ public class ShoppingList
 
     public String getName() {
         return NAME_PREFIX + (getListIndex() + 1);
+    }
+
+    public void deleteCheckedItems() {
+        Iterator it = this.items.iterator();
+
+        while (it.hasNext()) {
+            Item i = (Item) it.next();
+            if (i.isChecked()) {
+                it.remove();
+            }
+        }
+    }
+
+    public void deleteXedItems() {
+        Iterator it = this.items.iterator();
+
+        while (it.hasNext()) {
+            Item i = (Item) it.next();
+            if (i.isXed()) {
+                it.remove();
+            }
+        }
     }
 
 }
