@@ -37,7 +37,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Runnable {
 
     public static final String OUTPUT_FILE = "shoppingLists.json";
 
@@ -189,16 +189,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         integrator.initiateScan();
     }
 
+    public void run() {
+        myLists.getCurrent().addItem(new Item(this.resul.getContents()));
+        System.out.println(myLists.getCurrent());
+        this.resul = null;
+    }
+
+    IntentResult resul;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (result != null) {
+            this.resul = result;
+            Thread thread = new Thread(this);
+            thread.start();
+            renderList(myLists.getCurrent());
+            /*
             System.out.println("\"" + result.getContents()+ "\"");
             Item item = new Item(result.getContents());
             myLists.getCurrent().addItem(item);
             System.out.println(myLists.getCurrent());
             renderList(myLists.getCurrent());
+            */
         }
     }
 
