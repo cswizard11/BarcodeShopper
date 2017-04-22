@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -45,10 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ListList myLists = new ListList();
     private String m_Text = "";
 
-    private EntryBox popup;
-    private EditText product;
-    private EditText price;
-    private EditText seller;
+    EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,17 +63,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
         FloatingActionButton addItemButton = (FloatingActionButton) findViewById(R.id.addItemButton);
         addItemButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view)
             {
-
                 if(!myLists.noSelectedList())
                 {
-                    popup = new EntryBox();
-                    popup.show(getFragmentManager(), "tag");
+                    popupInput();
                 }
             }
         });
@@ -91,24 +84,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         loadListsFromFile();
-
-        final LayoutInflater factory = getLayoutInflater();
-        final View entryBoxView = factory.inflate(R.layout.entry_box, null);
-        price = (EditText) entryBoxView.findViewById(R.id.price);
-        seller = (EditText) entryBoxView.findViewById(R.id.seller);
     }
 
     public void onPopupComplete(View view) {
-        product = (EditText) findViewById(R.id.product);
+        setContentView(R.layout.entry_box);
+        EditText product = (EditText) findViewById(R.id.product);
+        EditText price = (EditText) findViewById(R.id.price);
+        EditText seller = (EditText) findViewById(R.id.seller);
+        System.out.println(product.getText());
         String product1 = product.getText().toString();
         String price1 = price.getText().toString();
         String seller1 = seller.getText().toString();
-        System.out.println("PRODUCT: " + product.getText());
-        myLists.getCurrent().addItem(new Item(product1, price1, seller1, 10231920));
+        setContentView(R.layout.activity_main);
+        myLists.getCurrent().addItem(new Item(product1, price1, seller1, "10231920"));
         ListView currentListView = (ListView) findViewById(R.id.item_list);
         ListAdapter listAdapter = new ListAdapter(getApplicationContext(), myLists.getCurrent().getItems());
         currentListView.setAdapter(listAdapter);
-        popup.dismiss();
         //View productView = new View()
     }
 
@@ -169,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void renderList(ShoppingList list)
     {
-        ListView currentListView =(ListView)findViewById(R.id.item_list);
+        ListView currentListView = (ListView)findViewById(R.id.item_list);
         ListAdapter listAdapter = new ListAdapter(getApplicationContext(), list.getItems());
         currentListView.setAdapter(listAdapter);
         TextView text = (TextView)findViewById(R.id.Title);
@@ -194,7 +185,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (result != null) {
-            System.out.println(result.getContents());
+            System.out.println("\"" + result.getContents()+ "\"");
+            Item item = new Item(result.getContents());
+            myLists.getCurrent().addItem(item);
+            System.out.println(myLists.getCurrent());
+            renderList(myLists.getCurrent());
         }
     }
 
@@ -229,6 +224,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void popupInput() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText textView = new EditText(getApplicationContext());
+        textView.setHint("Product");
+        builder.setView(textView);
+        builder.setNegativeButton("ENTER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                myLists.getCurrent().addItem(new Item(textView.getText().toString(), "pizza", "pizza", "pizza"));
+                renderList(myLists.getCurrent());
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    public void popupText(String text) {
+        System.out.println("failed)");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(text);
+        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
 }
