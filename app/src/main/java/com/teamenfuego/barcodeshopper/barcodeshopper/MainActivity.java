@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -279,16 +280,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         layout.setOrientation(LinearLayout.VERTICAL);
 
         final EditText productText = new EditText(getApplicationContext());
+        productText.setTextColor(Color.BLACK);
+        productText.setHintTextColor(Color.GRAY);
         productText.setHint("Product");
         layout.addView(productText);
 
+
         final EditText sellerText = new EditText(getApplicationContext());
+        sellerText.setTextColor(Color.BLACK);
+        sellerText.setHintTextColor(Color.GRAY);
         sellerText.setHint("Seller");
         layout.addView(sellerText);
 
+
         final EditText priceText = new EditText(getApplicationContext());
+        priceText.setTextColor(Color.BLACK);
+        priceText.setHintTextColor(Color.GRAY);
         priceText.setHint("Price");
         layout.addView(priceText);
+
 
         builder.setView(layout);
 
