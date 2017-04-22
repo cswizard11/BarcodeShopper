@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -228,13 +229,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void popupInput() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText textView = new EditText(getApplicationContext());
-        textView.setHint("Product");
-        builder.setView(textView);
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText productText = new EditText(getApplicationContext());
+        productText.setHint("Product");
+        layout.addView(productText);
+
+        final EditText sellerText = new EditText(getApplicationContext());
+        sellerText.setHint("Seller");
+        layout.addView(sellerText);
+
+        final EditText priceText = new EditText(getApplicationContext());
+        priceText.setHint("Price");
+        layout.addView(priceText);
+
+        builder.setView(layout);
+
         builder.setNegativeButton("ENTER", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                myLists.getCurrent().addItem(new Item(textView.getText().toString(), "pizza", "pizza", "pizza"));
+                myLists.getCurrent().addItem(new Item(productText.getText().toString(), sellerText.getText().toString(), priceText.getText().toString(), "-1"));
                 renderList(myLists.getCurrent());
                 dialog.cancel();
             }
